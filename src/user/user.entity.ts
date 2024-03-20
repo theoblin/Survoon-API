@@ -3,6 +3,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn 
 } from "typeorm";
 import { IsEmail } from 'class-validator';
@@ -26,10 +27,10 @@ export class UserEntity {
     type:string;
 
     @Column() 
-    createdDate = new Date();
+    createdDate:string;
 
-    @ManyToOne(type => SurveyEntity, survey => survey.user)
-    @JoinColumn({name: 'surveyId',referencedColumnName: "id" })
-    survey: SurveyEntity;
+
+    @OneToMany(type => SurveyEntity, survey => survey.user)
+    survey: SurveyEntity[]
 
 }

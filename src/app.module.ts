@@ -12,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-/*     TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
       port: 5432,
@@ -20,11 +20,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: 'postgres',
       database: 'postgres',
       entities: ["dist/survey/survey.entity.js"],
-      autoLoadEntities: false,
-      synchronize: false,
-    }), */
+      autoLoadEntities: true,
+      synchronize: true,
+    }), 
     ConfigModule.forRoot({isGlobal:true}),
-    /* ModelModule */
+    ModelModule 
   ],
   controllers: [AppController,UserController,SurveyController],
   providers: [AppService,UserService,SurveyService],

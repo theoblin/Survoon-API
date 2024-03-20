@@ -3,6 +3,7 @@ import { UserEntity } from "src/user/user.entity";
 import {
     Column,
     Entity,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn 
 } from "typeorm";
@@ -29,7 +30,6 @@ export class SurveyEntity {
     @Column() 
     link:string;
 
-    @OneToMany(type => UserEntity, user => user.survey)
-    user: UserEntity
-
+    @ManyToOne(type => UserEntity, user => user.survey)
+    user: UserEntity;
 }

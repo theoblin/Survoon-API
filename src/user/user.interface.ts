@@ -1,5 +1,5 @@
 export interface IUserData {
-    uuid: string;
+    id: string;
     email: string;
     token: string;
     type:string;

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUserRO } from './user.interface';
-import jwt from 'jsonwebtoken';
-/* import { UserEntity } from './user.entity'; */
+import * as jwt from 'jsonwebtoken';
+import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
 import { ConfigService } from '@nestjs/config';
@@ -13,11 +13,9 @@ import { SECRET } from '../config';
 export class UserService {
 
     constructor(
-       /*  @InjectRepository(UserEntity) */
-        /* private readonly userEntityRepository: Repository<UserEntity>, */
+        @InjectRepository(UserEntity) 
+        private readonly userEntityRepository: Repository<UserEntity>, 
         private configService: ConfigService
-
-
     ) {}
 
     async getOneUserById(id:string) {
@@ -33,7 +31,7 @@ export class UserService {
     }
 
     async createOneUser(dto: CreateUserDto)/* : Promise<IUserRO> */ {
-        return this.generateJWT({"email":"test@gmail.com","id":1})
+        return this.generateJWT({"email":dto.email,"id":dto.id})
     }
 
     async deleteById(id:string) {
@@ -55,8 +53,8 @@ export class UserService {
     
         return jwt.sign({
           email: user.email,
+          id:user.id,
           exp: exp.getTime() / 1000,
-          id: user.id,
         }, SECRET);
       }
 
