@@ -1,4 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
+import { AnswerEntity } from "src/answer/answer.entity";
 import { UserEntity } from "src/user/user.entity";
 import {
     Column,
@@ -28,8 +29,20 @@ export class SurveyEntity {
     createdDate:Date;
 
     @Column() 
+    lastUpdateDate:Date;
+
+    @Column() 
     link:string;
+
+    @Column() 
+    visibility:string;
+
+    @Column() 
+    active:boolean;
 
     @ManyToOne(type => UserEntity, user => user.survey)
     user: UserEntity;
+
+    @OneToMany(type => AnswerEntity, answer => answer.survey)
+    answer: AnswerEntity[]
 }

@@ -1,7 +1,6 @@
 export interface IUserData {
-    id: string;
+    id: number;
     email: string;
-    token: string;
     type:string;
     createdDate:string;
   }

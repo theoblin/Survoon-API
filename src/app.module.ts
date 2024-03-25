@@ -2,12 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { UserController } from './user/user.controller';
-import { SurveyController } from './survey/survey.controller';
-import { UserService } from './user/user.service';
-import { SurveyService } from './survey/survey.service';
-import { ModelModule } from './model.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
+import { SurveyModule } from './survey/survey.module';
+import { AnswerModule } from './answer/answer.module';
 
 
 @Module({
@@ -24,9 +22,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
     }), 
     ConfigModule.forRoot({isGlobal:true}),
-    ModelModule 
+    UserModule,
+    SurveyModule,
+    AnswerModule
   ],
-  controllers: [AppController,UserController,SurveyController],
-  providers: [AppService,UserService,SurveyService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

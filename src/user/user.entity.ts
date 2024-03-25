@@ -1,8 +1,6 @@
 import {
     Column,
     Entity,
-    JoinColumn,
-    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn 
 } from "typeorm";
@@ -16,7 +14,7 @@ export class UserEntity {
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column() 
+    @Column({ unique: true }) 
     @IsEmail()
     email:string;
 
@@ -28,7 +26,6 @@ export class UserEntity {
 
     @Column() 
     createdDate:string;
-
 
     @OneToMany(type => SurveyEntity, survey => survey.user)
     survey: SurveyEntity[]

@@ -12,12 +12,15 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsNotEmpty()
-  readonly password: string;
+  password: string;
 
   @IsNotEmpty()
   readonly type: string;
 
   @IsNotEmpty()
-  readonly createdDate: string;
+  readonly token: string;
+
+  @IsNotEmpty()
+  createdDate: Date;
   
 }

@@ -1,13 +1,15 @@
-import { IUserData } from "src/user/user.interface";
 
 export interface ISurveyData {
-    uuid: string;
+    id: number;
     config: string;
     tags: string;
     name:string;
-    createdDate:string;
+    createdDate:Date;
+    lastUpdateDate:Date;
     link:string;
-    user:IUserData;
+    visibility:string;
+    active:boolean;
+    user:number;
   }
   
   export interface ISurveyRO {

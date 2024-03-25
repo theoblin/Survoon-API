@@ -8,9 +8,4 @@ export class LoginUserDto {
   @IsNotEmpty()
   readonly password: string;
 
-  @IsNotEmpty()
-  readonly type: string;
-
-  @IsNotEmpty()
-  readonly createdDate: string;
 }

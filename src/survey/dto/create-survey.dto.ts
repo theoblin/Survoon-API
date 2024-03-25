@@ -3,24 +3,26 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateSurveyDto {
 
-  @ApiProperty({description:"Questions list,sizes,colors,texts"})
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Config cant be null',always: true})
   readonly config: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Tags cant be null',always: true})
   readonly tags: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Name cant be null',always: true})
   readonly name: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  readonly createdDate: string;
+  @IsNotEmpty({ message: 'Visibility cant be null',always: true})
+  readonly visibility: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Active cant be null',always: true})
+  readonly active: boolean;
+
+  readonly createdDate: Date;
+
+  readonly lastUpdateDate: Date;
+
+  @IsNotEmpty({ message: 'Link cant be null',always: true})
   readonly link: string;
   
 }
