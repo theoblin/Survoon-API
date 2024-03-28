@@ -6,10 +6,12 @@ import { UserService } from './user.service';
 import { AuthMiddleware } from './auth.middleware';
 import { SurveyService } from 'src/survey/survey.service';
 import { SurveyEntity } from 'src/survey/survey.entity';
+import { TemplateEntity } from 'src/template/template.entity';
+import { TemplateService } from 'src/template/template.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity])],
-  providers: [UserService,SurveyService],
+  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity])],
+  providers: [UserService,SurveyService,TemplateService],
   controllers: [
     UserController
   ],

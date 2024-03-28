@@ -2,10 +2,10 @@ import { IsNotEmpty } from 'class-validator';
 
 export class LoginUserDto {
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Email cant be null',always: true})
   readonly email: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Password cant be null',always: true})
   readonly password: string;
 
 }

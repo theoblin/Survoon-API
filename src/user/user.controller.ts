@@ -6,11 +6,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { IUserRO } from './user.interface';
 import { UserService } from './user.service';
 import { SurveyService } from 'src/survey/survey.service';
-import { User } from './user.decorator';
+import { TemplateService } from 'src/template/template.service';
 
 @Controller('/api/v2/user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly surveyService: SurveyService) {}
+  constructor(private readonly userService: UserService, private readonly surveyService: SurveyService, private readonly templateService: TemplateService) {}
 
     @ApiOperation({ summary: 'Search user' })
     @ApiResponse({ status: 200, description: 'Return user' })
@@ -35,6 +35,14 @@ export class UserController {
     @Get('surveys') 
     async getUserSurvey(@Body('id') userId: number)   {
       return this.surveyService.getUserSurveyById(userId)
+    } 
+
+    @ApiOperation({ summary: 'Search user s templates' })
+    @ApiResponse({ status: 200, description: 'Return templates' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    @Get('templates') 
+    async getUserTemplate(@Body('id') userId: number)   {
+      return this.templateService.getUserTemplateById(userId)
     } 
 
     @ApiOperation({ summary: 'Create user' })

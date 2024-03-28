@@ -2,25 +2,17 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
 
-  @IsNotEmpty()
-  readonly id: string;
-
-  @IsNotEmpty()
-  readonly username: string;
-
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Email cant be null',always: true})
   readonly email: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Password cant be null',always: true})
   password: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Type cant be null',always: true})
   readonly type: string;
 
-  @IsNotEmpty()
   readonly token: string;
 
-  @IsNotEmpty()
   createdDate: Date;
   
 }

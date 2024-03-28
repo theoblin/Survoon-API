@@ -4,18 +4,30 @@ import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
 import { SurveyService } from './survey.service';
 import { User } from '../user/user.decorator';
+import { AnswerService } from 'src/answer/answer.service';
 
 @Controller('/api/v2/survey')
 export class SurveyController {
-  constructor(private readonly surveyService: SurveyService) {}
+  constructor(private readonly surveyService: SurveyService,private readonly answerService: AnswerService) {}
 
     @ApiOperation({ summary: 'Search survey' })
     @ApiResponse({ status: 200, description: 'Return survey' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Get(':slug') 
-    async getOneSurvey(@Param('slug') id:number)   {
-      return this.surveyService.getOneSurveyById(id)
+    @Post() 
+    async getOneSurvey(@Body('id') surveyId:number)   {
+      return this.surveyService.getOneSurveyById(surveyId)
     } 
+
+
+    @ApiOperation({ summary: 'Search survey s answers' })
+    @ApiResponse({ status: 200, description: 'Return answers' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    @Post("answers") 
+    async getSurveyAnswers(@Body('id') surveyId: number)   {
+      console.log(surveyId)
+      return this.answerService.getSurveyAnswersById(surveyId)
+    } 
+
 
     @ApiOperation({ summary: 'Update survey' })
     @ApiResponse({ status: 201, description: 'The survey has been successfully updated.' })
@@ -28,7 +40,7 @@ export class SurveyController {
     @ApiOperation({ summary: 'Create survey' })
     @ApiResponse({ status: 201, description: 'The survey has been successfully created.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Post()
+    @Post("/create")
     async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto){
       console.log(createSurveyData)
       return this.surveyService.createOneSurvey(userId,createSurveyData)

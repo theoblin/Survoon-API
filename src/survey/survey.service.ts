@@ -6,6 +6,7 @@ import { SurveyEntity } from './survey.entity';
 import { UserEntity } from '../user/user.entity'; 
 import { Repository } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
+import { TemplateEntity } from 'src/template/template.entity';
 
 @Injectable()
 export class SurveyService {
@@ -50,6 +51,7 @@ export class SurveyService {
     }
 
 
+
     async updateOneSurvey(dto: UpdateSurveyDto) : Promise<ISurveyRO>  {
         let toUpdate = await this.surveyEntityRepository.findOne({where:{id:dto.id}});
         if (!toUpdate) throw new HttpException('Survey nor found', 403);
@@ -74,6 +76,7 @@ export class SurveyService {
         survey.tags = dto.tags;
         survey.visibility = dto.visibility;
         survey.active = dto.active;
+        survey.template = dto.active;
 
         const creator = await this.userEntityRepository.findOne({where:{id:userId}})
         if (!creator) throw new HttpException('User not found', 401);
@@ -99,7 +102,8 @@ export class SurveyService {
             active:survey.active,
             createdDate:survey.createdDate,
             lastUpdateDate:survey.lastUpdateDate,
-            user:survey.user.id
+            user:survey.user.id,
+            template:survey.template.id
         };
 
         return { survey: surveyRO };

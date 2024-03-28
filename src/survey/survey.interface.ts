@@ -10,6 +10,7 @@ export interface ISurveyData {
     visibility:string;
     active:boolean;
     user:number;
+    template:number;
   }
   
   export interface ISurveyRO {

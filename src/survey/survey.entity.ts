@@ -1,5 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 import { AnswerEntity } from "src/answer/answer.entity";
+import { TemplateEntity } from "src/template/template.entity";
 import { UserEntity } from "src/user/user.entity";
 import {
     Column,
@@ -45,4 +46,7 @@ export class SurveyEntity {
 
     @OneToMany(type => AnswerEntity, answer => answer.survey)
     answer: AnswerEntity[]
+
+    @ManyToOne(type => TemplateEntity, template => template.survey)
+    template: TemplateEntity;
 }

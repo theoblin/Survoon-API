@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { SurveyModule } from './survey/survey.module';
 import { AnswerModule } from './answer/answer.module';
+import { TemplateModule } from './template/template.module';
 
 
 @Module({
@@ -24,7 +25,8 @@ import { AnswerModule } from './answer/answer.module';
     ConfigModule.forRoot({isGlobal:true}),
     UserModule,
     SurveyModule,
-    AnswerModule
+    AnswerModule,
+    TemplateModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -34,6 +34,25 @@ export class AnswerService {
         return this.buildAnswerRO(answer)
     }
 
+    async getSurveyAnswersById(id:number) : Promise<IAnswerRO[]>  {
+        console.log(id)
+        const answersArray = []
+        await this.answerEntityRepository.createQueryBuilder("answer")
+        .leftJoinAndSelect("answer.survey", "survey")
+        .where("survey.id = :id", {id:id})
+        .getMany().then(answers => {
+            answers.forEach((answer) => answersArray.push(this.buildAnswerRO(answer)))
+       })
+
+       if (answersArray.length <= 0) {
+        const errors = { Answer: ' not found' };
+        throw new HttpException({ errors }, 404);
+    }
+        return answersArray
+    }
+
+ 
+
     async updateOneAnswer( dto: UpdateAnswerDto): Promise<IAnswerRO> {
         const queryBuilder = this.answerEntityRepository.createQueryBuilder('answer');
         const toUpdate = await queryBuilder
