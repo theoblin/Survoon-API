@@ -50,9 +50,7 @@ export class SurveyService {
         return surveysArray
     }
 
-
-
-    async updateOneSurvey(dto: UpdateSurveyDto) : Promise<ISurveyRO>  {
+    async updateOneSurvey(dto: UpdateSurveyDto) : Promise<ISurveyRO>  { ////////////////////////////////// Arret ici. Il faut faire en sorte d'enregistrer les questions dans le survey
         let toUpdate = await this.surveyEntityRepository.findOne({where:{id:dto.id}});
         if (!toUpdate) throw new HttpException('Survey nor found', 403);
         dto.lastUpdateDate = new Date();

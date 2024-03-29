@@ -1,10 +1,13 @@
 import { IsNotEmpty } from "class-validator";
 import { AnswerEntity } from "src/answer/answer.entity";
+import { QuestionEntity } from "src/question/question.entity";
 import { TemplateEntity } from "src/template/template.entity";
 import { UserEntity } from "src/user/user.entity";
 import {
     Column,
     Entity,
+    JoinTable,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn 
@@ -49,4 +52,8 @@ export class SurveyEntity {
 
     @ManyToOne(type => TemplateEntity, template => template.survey)
     template: TemplateEntity;
+
+    @ManyToMany(() => QuestionEntity)
+    @JoinTable()
+    question: QuestionEntity[]
 }
