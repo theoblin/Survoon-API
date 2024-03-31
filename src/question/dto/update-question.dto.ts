@@ -4,7 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 export class UpdateQuestionDto {
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Question ID cant be null',always: true})
   readonly id: number;
 
   @ApiProperty()
@@ -23,10 +23,6 @@ export class UpdateQuestionDto {
   readonly visibility: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   lastUpdateDate:Date;
-
-  @IsNotEmpty()
-  readonly user: number;
 
 }

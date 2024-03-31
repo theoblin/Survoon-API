@@ -3,34 +3,29 @@ import { IsNotEmpty } from "class-validator";
 
 export class UpdateSurveyDto {
     @ApiProperty()
+    @IsNotEmpty({ message: 'Survey ID cant be null',always: true})
     readonly id: number;
 
     @ApiProperty()
-    @IsNotEmpty()
     readonly config: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     readonly tags: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     readonly name: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     lastUpdateDate:Date;
 
     @ApiProperty()
-    @IsNotEmpty()
     readonly visibility: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     readonly active: boolean;
 
     @ApiProperty()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'User ID cant be null',always: true})
     readonly user: number;
   
   }

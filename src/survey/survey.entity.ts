@@ -44,16 +44,16 @@ export class SurveyEntity {
     @Column() 
     active:boolean;
 
-    @ManyToOne(type => UserEntity, user => user.survey)
+    @ManyToOne(type => UserEntity, user => user.survey, { onDelete: 'CASCADE' })
     user: UserEntity;
 
-    @OneToMany(type => AnswerEntity, answer => answer.survey)
+    @OneToMany(type => AnswerEntity, answer => answer.survey, { onDelete: 'CASCADE' })
     answer: AnswerEntity[]
 
     @ManyToOne(type => TemplateEntity, template => template.survey)
     template: TemplateEntity;
 
-    @ManyToMany(() => QuestionEntity)
+    @ManyToMany(() => QuestionEntity, { cascade: true })
     @JoinTable()
     question: QuestionEntity[]
 }

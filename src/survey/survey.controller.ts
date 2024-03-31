@@ -41,9 +41,9 @@ export class SurveyController {
     @ApiResponse({ status: 201, description: 'The survey has been successfully created.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Post("/create")
-    async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto){
+    async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto,@Body('template') templateId:number){
       console.log(createSurveyData)
-      return this.surveyService.createOneSurvey(userId,createSurveyData)
+      return this.surveyService.createOneSurvey(userId,createSurveyData,templateId)
     }
 
     @ApiOperation({ summary: 'Delete survey' })

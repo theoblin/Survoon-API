@@ -38,7 +38,7 @@ export class QuestionEntity {
     @Column() 
     visibility:string;
 
-    @ManyToOne(type => UserEntity, user => user.template)
+    @ManyToOne(type => UserEntity, user => user.template, { onDelete: 'CASCADE' })
     user: UserEntity;
 
 }

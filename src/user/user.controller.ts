@@ -7,10 +7,16 @@ import { IUserRO } from './user.interface';
 import { UserService } from './user.service';
 import { SurveyService } from 'src/survey/survey.service';
 import { TemplateService } from 'src/template/template.service';
+import { QuestionService } from 'src/question/question.service';
 
 @Controller('/api/v2/user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly surveyService: SurveyService, private readonly templateService: TemplateService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly surveyService: SurveyService,
+    private readonly templateService: TemplateService,
+    private readonly questionService: QuestionService
+  ) {}
 
     @ApiOperation({ summary: 'Search user' })
     @ApiResponse({ status: 200, description: 'Return user' })
@@ -43,6 +49,14 @@ export class UserController {
     @Get('templates') 
     async getUserTemplate(@Body('id') userId: number)   {
       return this.templateService.getUserTemplateById(userId)
+    } 
+
+    @ApiOperation({ summary: 'Search user s questions' })
+    @ApiResponse({ status: 200, description: 'Return questions' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    @Get('questions') 
+    async getUserQuestion(@Body('id') userId: number)   {
+      return this.questionService.getUserQuestionById(userId)
     } 
 
     @ApiOperation({ summary: 'Create user' })

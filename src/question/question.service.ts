@@ -8,6 +8,7 @@ import { QuestionEntity } from './question.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { SurveyEntity } from 'src/survey/survey.entity';
+import { SurveyService } from 'src/survey/survey.service';
 
 @Injectable()
 export class QuestionService {
@@ -18,7 +19,8 @@ export class QuestionService {
         @InjectRepository(SurveyEntity) 
         private readonly SurveyEntityRepository: Repository<SurveyEntity>, 
         @InjectRepository(QuestionEntity) 
-        private readonly QuestionEntityRepository: Repository<QuestionEntity>
+        private readonly QuestionEntityRepository: Repository<QuestionEntity>,
+
     ) {}
 
     async getOneQuestionById(id:number) : Promise<IQuestionRO> {
@@ -37,7 +39,7 @@ export class QuestionService {
         return this.buildQuestionRO(question)
     }
 
-    async getUserQuestionById(id:number) : Promise<IQuestionRO[]>  {
+    async getUserQuestionById(id:number) : Promise<IQuestionRO[]>  { //TODO : Finir cette fonction (attention le password du user est renvoyé ici)
         const questionArray = []
         await this.QuestionEntityRepository.createQueryBuilder("question")
         .leftJoinAndSelect("question.user", "user")
@@ -53,8 +55,12 @@ export class QuestionService {
         return questionArray
     }
 
-    async updateOneQuestion( dto: UpdateQuestionDto): Promise<IQuestionRO> {
-        let toUpdate = await this.QuestionEntityRepository.findOne({where:{id:dto.id}});
+    async updateOneQuestion( dto: UpdateQuestionDto,userId:number): Promise<IQuestionRO> {
+        let toUpdate = await this.QuestionEntityRepository.createQueryBuilder("question")
+        .leftJoinAndSelect("question.user", "user")
+        .where("user.id = :id", {id:userId})
+        .where('question.id = :id', {id:dto.id })
+        .getOne();
         if (!toUpdate) throw new HttpException('Question nor found', 403);
         dto.lastUpdateDate = new Date();
         let updated = Object.assign(toUpdate, dto);
@@ -82,20 +88,26 @@ export class QuestionService {
 
         const newQuestion = await this.QuestionEntityRepository.save(question);
 
-        const survey = await this.SurveyEntityRepository.findOne({where:{id:surveyId}})
+        const survey = await this.SurveyEntityRepository
+        .createQueryBuilder('survey')
+        .leftJoinAndSelect('survey.question', 'question')
+        .where('survey.id = :id', { id: surveyId })
+        .getOne();
+
         if (!survey) throw new HttpException('Survey not found', 401);
-        survey.question = [newQuestion];
 
+        survey.question.push(newQuestion)
 
-        return this.buildQuestionRO(newQuestion);
-;
+        this.SurveyEntityRepository.save(survey)
+
+        return this.buildQuestionRO(newQuestion,survey);
     }
 
     async deleteQuestionById(id:number) {
-        return this.QuestionEntityRepository.delete({ id: id });
+        return this.QuestionEntityRepository.delete({ id: id }); // TODO: Vérifier que ça enlève bien les relations survey
     }
 
-    private buildQuestionRO(question: QuestionEntity) {
+    private buildQuestionRO(question: QuestionEntity,survey?:SurveyEntity) {
 
         const questionRO = {
             id: question.id,
@@ -107,6 +119,7 @@ export class QuestionService {
             createdDate:question.createdDate,
             lastUpdateDate:question.lastUpdateDate,
             user:question.user.id,
+            survey:survey.id,
         };
 
         return { question: questionRO };

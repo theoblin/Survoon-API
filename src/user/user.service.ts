@@ -42,9 +42,9 @@ export class UserService {
 
     async updateOneUser(id: number, dto: UpdateUserDto) : Promise<IUserRO> {
 
-        if (!id) throw new HttpException('NotFoundException', 404);
+        if (!id) throw new HttpException({ User: 'Not found' }, 401);
         let toUpdate = await this.userEntityRepository.findOne({ where: { id: id } });
-        if (!toUpdate) throw new HttpException('NotFoundException', 404);
+        if (!toUpdate) throw new HttpException({ User: 'Not found' }, 401);
         let updated = Object.assign(toUpdate, dto);
         const user = await this.userEntityRepository.save(updated);
 

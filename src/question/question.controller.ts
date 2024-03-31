@@ -21,8 +21,8 @@ export class QuestionController {
     @ApiResponse({ status: 201, description: 'The question has been successfully updated.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Put() 
-    async updateOneQuestion(@Body('question') newQuestionData: UpdateQuestionDto){
-      return this.questionService.updateOneQuestion(newQuestionData)
+    async updateOneQuestion(@Body('user') id: number,@Body('question') newQuestionData: UpdateQuestionDto){
+      return this.questionService.updateOneQuestion(newQuestionData,id)
     }
 
     @ApiOperation({ summary: 'Create question' })

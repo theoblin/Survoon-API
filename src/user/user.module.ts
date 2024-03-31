@@ -8,10 +8,12 @@ import { SurveyService } from 'src/survey/survey.service';
 import { SurveyEntity } from 'src/survey/survey.entity';
 import { TemplateEntity } from 'src/template/template.entity';
 import { TemplateService } from 'src/template/template.service';
+import { QuestionService } from 'src/question/question.service';
+import { QuestionEntity } from 'src/question/question.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity])],
-  providers: [UserService,SurveyService,TemplateService],
+  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity])],
+  providers: [UserService,SurveyService,TemplateService,QuestionService],
   controllers: [
     UserController
   ],

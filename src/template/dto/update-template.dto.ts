@@ -4,29 +4,23 @@ import { IsNotEmpty } from 'class-validator';
 export class UpdateTemplateDto {
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Template ID cant be null',always: true})
   readonly id: number;
 
   @ApiProperty()
-  @IsNotEmpty()
   readonly config: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   readonly name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
   readonly active: Boolean;
 
-  
   @ApiProperty()
+  @IsNotEmpty({ message: 'User ID cant be null',always: true})
   readonly user: number;
 
-  
   @ApiProperty()
   readonly visibility: string;
-
-
 
 }

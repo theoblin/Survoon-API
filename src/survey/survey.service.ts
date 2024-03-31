@@ -16,6 +16,8 @@ export class SurveyService {
         private readonly surveyEntityRepository: Repository<SurveyEntity>, 
         @InjectRepository(UserEntity) 
         private readonly userEntityRepository: Repository<UserEntity>, 
+        @InjectRepository(TemplateEntity) 
+        private readonly templateEntityRepository: Repository<TemplateEntity>, 
     ) {}
 
     async getOneSurveyById(id:number) : Promise<ISurveyRO> {
@@ -50,7 +52,7 @@ export class SurveyService {
         return surveysArray
     }
 
-    async updateOneSurvey(dto: UpdateSurveyDto) : Promise<ISurveyRO>  { ////////////////////////////////// Arret ici. Il faut faire en sorte d'enregistrer les questions dans le survey
+    async updateOneSurvey(dto: UpdateSurveyDto) : Promise<ISurveyRO>  { 
         let toUpdate = await this.surveyEntityRepository.findOne({where:{id:dto.id}});
         if (!toUpdate) throw new HttpException('Survey nor found', 403);
         dto.lastUpdateDate = new Date();
@@ -60,7 +62,7 @@ export class SurveyService {
         return this.buildSurveyRO(survey);
     }
 
-    async createOneSurvey(userId:number, dto: CreateSurveyDto)  : Promise<ISurveyRO>   {
+    async createOneSurvey(userId:number, dto: CreateSurveyDto,templateId:number)  : Promise<ISurveyRO>   {
 
         let survey = Object.assign(dto);
 
@@ -74,11 +76,18 @@ export class SurveyService {
         survey.tags = dto.tags;
         survey.visibility = dto.visibility;
         survey.active = dto.active;
-        survey.template = dto.active;
 
         const creator = await this.userEntityRepository.findOne({where:{id:userId}})
         if (!creator) throw new HttpException('User not found', 401);
         survey.user = creator.id;
+
+        if(!templateId){
+            survey.template = 1;
+        }else{
+            const template = await this.templateEntityRepository.findOne({where:{id:templateId}})
+            if (!template) throw new HttpException('Template not found', 401);
+            survey.template = template.id;
+        }
 
         const newSurvey = await this.surveyEntityRepository.save(survey);
         return this.buildSurveyRO(newSurvey);

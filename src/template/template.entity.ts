@@ -36,7 +36,7 @@ export class TemplateEntity {
     @OneToMany(type => SurveyEntity, survey => survey.template)
     survey: SurveyEntity[]
 
-    @ManyToOne(type => UserEntity, user => user.template)
+    @ManyToOne(type => UserEntity, user => user.template, { onDelete: 'CASCADE' })
     user: UserEntity;
 
 }
