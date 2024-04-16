@@ -29,8 +29,8 @@ export class QuestionController {
     @ApiResponse({ status: 201, description: 'The question has been successfully created.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Post()
-    async createOneQuestion(@Body('user') id: number,@Body('question') createQuestionData: CreateQuestionDto,@Body('survey') surveyId: number){
-      return this.questionService.createOneQuestion(id,surveyId,createQuestionData)
+    async createOneQuestion(@Body('user') id: number,@Body('question') createQuestionData: CreateQuestionDto,@Body('survey') surveyId: number,@Body('template') templateId: number){
+      return this.questionService.createOneQuestion(id,surveyId,templateId,createQuestionData)
     }
 
     @ApiOperation({ summary: 'Delete question' })

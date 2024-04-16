@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpException, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -22,8 +22,8 @@ export class UserController {
     @ApiResponse({ status: 200, description: 'Return user' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @ApiResponse({ status: 404, description: 'No user found.' })
-    @Get() 
-    async getOneUser(@Body() data): Promise<IUserRO>   {
+    @Get("/:id") 
+    async getOneUser(@Param() data): Promise<IUserRO>   {
       return this.userService.getOneUserById(data.id)
     } 
 
@@ -71,9 +71,9 @@ export class UserController {
     @ApiOperation({ summary: 'Delete user' })
     @ApiResponse({ status: 201, description: 'The user has been successfully deleted.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Delete() 
-    async deleteOneUser(@Body('id') id: number){
-      return this.userService.deleteById(id);
+    @Delete("/:id") 
+    async deleteOneUser(@Param() data){
+      return this.userService.deleteById(data.id);
     }
 
     @ApiOperation({ summary: 'Login user' })

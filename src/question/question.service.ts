@@ -9,6 +9,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { SurveyEntity } from 'src/survey/survey.entity';
 import { SurveyService } from 'src/survey/survey.service';
+import { TemplateEntity } from 'src/template/template.entity';
 
 @Injectable()
 export class QuestionService {
@@ -20,6 +21,8 @@ export class QuestionService {
         private readonly SurveyEntityRepository: Repository<SurveyEntity>, 
         @InjectRepository(QuestionEntity) 
         private readonly QuestionEntityRepository: Repository<QuestionEntity>,
+        @InjectRepository(TemplateEntity) 
+        private readonly TemplateEntityRepository: Repository<TemplateEntity>,
 
     ) {}
 
@@ -39,7 +42,7 @@ export class QuestionService {
         return this.buildQuestionRO(question)
     }
 
-    async getUserQuestionById(id:number) : Promise<IQuestionRO[]>  { //TODO : Finir cette fonction (attention le password du user est renvoyé ici)
+    async getUserQuestionById(id:number) : Promise<IQuestionRO[]>  { 
         const questionArray = []
         await this.QuestionEntityRepository.createQueryBuilder("question")
         .leftJoinAndSelect("question.user", "user")
@@ -69,9 +72,10 @@ export class QuestionService {
         return this.buildQuestionRO(question);
     }
 
-    async createOneQuestion(userId:number,surveyId:number, dto: CreateQuestionDto)  : Promise<IQuestionRO>   {
+    async createOneQuestion(userId:number,surveyId:number,templateId:number, dto: CreateQuestionDto)  : Promise<IQuestionRO>   {
 
         let question = Object.assign(dto);
+        let params = {"survey":null,"template":null};
 
         question.name = dto.name;
         question.title = dto.title;
@@ -100,15 +104,33 @@ export class QuestionService {
 
         this.SurveyEntityRepository.save(survey)
 
-        return this.buildQuestionRO(newQuestion,survey);
+        params.survey = survey
+
+        if(templateId){
+            const template = await this.TemplateEntityRepository
+            .createQueryBuilder('template')
+            .leftJoinAndSelect('template.question', 'question')
+            .where('template.id = :id', { id: templateId })
+            .getOne();
+    
+            if (!template) throw new HttpException('Template not found', 401);
+    
+            template.question.push(newQuestion)
+    
+            this.TemplateEntityRepository.save(template)
+
+            params.template = template
+        }
+  
+        return this.buildQuestionRO(newQuestion,params);
     }
 
     async deleteQuestionById(id:number) {
-        return this.QuestionEntityRepository.delete({ id: id }); // TODO: Vérifier que ça enlève bien les relations survey
+        return this.QuestionEntityRepository.delete({ id: id }); 
     }
 
-    private buildQuestionRO(question: QuestionEntity,survey?:SurveyEntity) {
-
+    private buildQuestionRO(question: QuestionEntity,params?) {
+        
         const questionRO = {
             id: question.id,
             name: question.name,
@@ -119,8 +141,15 @@ export class QuestionService {
             createdDate:question.createdDate,
             lastUpdateDate:question.lastUpdateDate,
             user:question.user.id,
-            survey:survey.id,
+            survey:null,
+            template:null
         };
+
+        if(params){
+            params.survey?questionRO.survey =  params.survey.id:null;
+            params.template?questionRO.template =  params.template.id:null;
+        }
+       
 
         return { question: questionRO };
     }

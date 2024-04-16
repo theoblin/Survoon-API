@@ -8,6 +8,7 @@ import { SurveyModule } from './survey/survey.module';
 import { AnswerModule } from './answer/answer.module';
 import { TemplateModule } from './template/template.module';
 import { QuestionModule } from './question/question.module';
+import { LanguageModule } from './language/language.module';
 
 
 @Module({
@@ -28,7 +29,8 @@ import { QuestionModule } from './question/question.module';
     SurveyModule,
     AnswerModule,
     TemplateModule,
-    QuestionModule
+    QuestionModule,
+    LanguageModule
   ],
   controllers: [AppController],
   providers: [AppService],

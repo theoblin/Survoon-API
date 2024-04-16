@@ -7,19 +7,18 @@ export class UpdateAnswerDto {
   readonly id: number;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'QuestList cant be null',always: true})
   readonly questionsList: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Validity cant be null',always: true})
   readonly valid: boolean;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'LastUpdateDate cant be null',always: true})
+  readonly language: string;
+
+  @ApiProperty()
   lastUpdateDate: Date;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Survey ID cant be null',always: true})
   readonly survey: number;
 
 

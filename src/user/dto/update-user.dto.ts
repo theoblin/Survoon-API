@@ -1,16 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail } from "class-validator";
+import { LanguageEntity } from "src/language/language.entity";
 
 export class UpdateUserDto {
 
     @ApiProperty()
-    readonly password: string;
+    password: string;
 
-    @IsEmail()
+    
     @ApiProperty()
-    readonly email: string;
+    passwordOld: string;
 
     @ApiProperty()
-    readonly type: string;
+    passwordConfirm: string;
+
+    @ApiProperty()
+    email: string;
+
+    @ApiProperty()
+    type: string;
+
+    @ApiProperty()
+    language: LanguageEntity;
 
   }

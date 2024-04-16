@@ -4,23 +4,23 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateAnswerDto {
 
   @ApiProperty()
-  @IsNotEmpty()
   readonly ip: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'questionsList cant be null',always: true})
   readonly questionsList: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'valid cant be null',always: true})
   readonly valid: boolean;
 
   @ApiProperty()
-  @IsNotEmpty()
+  readonly language: string;
+
+  @ApiProperty()
   readonly createdDate: Date;
 
   @ApiProperty()
-  @IsNotEmpty()
   readonly lastUpdateDate: Date;
 
 }

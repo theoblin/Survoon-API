@@ -10,9 +10,10 @@ import { TemplateEntity } from 'src/template/template.entity';
 import { TemplateService } from 'src/template/template.service';
 import { QuestionService } from 'src/question/question.service';
 import { QuestionEntity } from 'src/question/question.entity';
+import { LanguageEntity } from 'src/language/language.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity,LanguageEntity])],
   providers: [UserService,SurveyService,TemplateService,QuestionService],
   controllers: [
     UserController

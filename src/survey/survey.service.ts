@@ -7,6 +7,7 @@ import { UserEntity } from '../user/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from "@nestjs/typeorm";
 import { TemplateEntity } from 'src/template/template.entity';
+import { LanguageEntity } from 'src/language/language.entity';
 
 @Injectable()
 export class SurveyService {
@@ -18,6 +19,8 @@ export class SurveyService {
         private readonly userEntityRepository: Repository<UserEntity>, 
         @InjectRepository(TemplateEntity) 
         private readonly templateEntityRepository: Repository<TemplateEntity>, 
+        @InjectRepository(LanguageEntity) 
+        private readonly languageEntityRepository: Repository<LanguageEntity>, 
     ) {}
 
     async getOneSurveyById(id:number) : Promise<ISurveyRO> {
@@ -62,7 +65,7 @@ export class SurveyService {
         return this.buildSurveyRO(survey);
     }
 
-    async createOneSurvey(userId:number, dto: CreateSurveyDto,templateId:number)  : Promise<ISurveyRO>   {
+    async createOneSurvey(userId:number, dto: CreateSurveyDto,templateId:number,languageCode:string)  : Promise<ISurveyRO>   {
 
         let survey = Object.assign(dto);
 
@@ -77,9 +80,15 @@ export class SurveyService {
         survey.visibility = dto.visibility;
         survey.active = dto.active;
 
+        if (!userId) throw new HttpException('User required', 403);
         const creator = await this.userEntityRepository.findOne({where:{id:userId}})
         if (!creator) throw new HttpException('User not found', 401);
         survey.user = creator.id;
+
+        if (!languageCode) throw new HttpException('Language required', 403);
+        const language = await this.languageEntityRepository.findOne({where:{code:languageCode}})
+        if (!language) throw new HttpException('Language not found', 401);
+        survey.language = language.id;
 
         if(!templateId){
             survey.template = 1;

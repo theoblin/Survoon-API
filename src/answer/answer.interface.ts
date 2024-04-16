@@ -5,6 +5,7 @@ export interface IAnswerData {
     ip:string;
     questionsList:string;
     valid: boolean;
+    language: string;
     createdDate: Date;
     lastUpdateDate: Date;
     survey:number;

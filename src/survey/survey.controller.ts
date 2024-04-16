@@ -4,11 +4,11 @@ import { CreateSurveyDto } from './dto/create-survey.dto';
 import { UpdateSurveyDto } from './dto/update-survey.dto';
 import { SurveyService } from './survey.service';
 import { User } from '../user/user.decorator';
-import { AnswerService } from 'src/answer/answer.service';
+import * as answerService from 'src/answer/answer.service';
 
 @Controller('/api/v2/survey')
 export class SurveyController {
-  constructor(private readonly surveyService: SurveyService,private readonly answerService: AnswerService) {}
+  constructor(private readonly surveyService: SurveyService,private readonly answerService: answerService.AnswerService) {}
 
     @ApiOperation({ summary: 'Search survey' })
     @ApiResponse({ status: 200, description: 'Return survey' })
@@ -41,9 +41,9 @@ export class SurveyController {
     @ApiResponse({ status: 201, description: 'The survey has been successfully created.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Post("/create")
-    async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto,@Body('template') templateId:number){
+    async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto,@Body('template') templateId:number,@Body('language') languageCode:string){
       console.log(createSurveyData)
-      return this.surveyService.createOneSurvey(userId,createSurveyData,templateId)
+      return this.surveyService.createOneSurvey(userId,createSurveyData,templateId,languageCode)
     }
 
     @ApiOperation({ summary: 'Delete survey' })

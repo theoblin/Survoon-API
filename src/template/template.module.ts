@@ -9,9 +9,10 @@ import { SurveyService } from 'src/survey/survey.service';
 import { TemplateEntity } from './template.entity';
 import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
+import { LanguageEntity } from 'src/language/language.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TemplateEntity,SurveyEntity,UserEntity]), SurveyModule, UserModule],
+  imports: [TypeOrmModule.forFeature([TemplateEntity,SurveyEntity,UserEntity,LanguageEntity]), SurveyModule, UserModule],
   providers: [TemplateService,SurveyService],
   controllers: [
     TemplateController

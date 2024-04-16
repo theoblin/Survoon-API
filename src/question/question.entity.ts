@@ -41,4 +41,8 @@ export class QuestionEntity {
     @ManyToOne(type => UserEntity, user => user.template, { onDelete: 'CASCADE' })
     user: UserEntity;
 
+    @ManyToMany(() => SurveyEntity, { cascade: true, onDelete: 'CASCADE' })
+    @JoinTable()
+    surveys: SurveyEntity[];
+
 }

@@ -1,5 +1,5 @@
-import { IsNotEmpty } from "class-validator";
 import { AnswerEntity } from "src/answer/answer.entity";
+import { LanguageEntity } from "src/language/language.entity";
 import { QuestionEntity } from "src/question/question.entity";
 import { TemplateEntity } from "src/template/template.entity";
 import { UserEntity } from "src/user/user.entity";
@@ -56,4 +56,7 @@ export class SurveyEntity {
     @ManyToMany(() => QuestionEntity, { cascade: true })
     @JoinTable()
     question: QuestionEntity[]
+
+    @ManyToOne(type => LanguageEntity, language =>language.survey,{ onDelete: 'CASCADE'})
+    language: LanguageEntity;
 }

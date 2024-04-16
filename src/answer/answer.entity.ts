@@ -21,6 +21,9 @@ export class AnswerEntity {
   
     @Column() 
     valid: boolean;
+
+    @Column() 
+    language: string;
   
     @Column() 
     createdDate: Date;
@@ -28,7 +31,7 @@ export class AnswerEntity {
     @Column() 
     lastUpdateDate: Date;
 
-    @ManyToOne(type => SurveyEntity, survey =>survey.answer)
+    @ManyToOne(type => SurveyEntity, survey =>survey.answer,{ onDelete: 'CASCADE'})
     survey: SurveyEntity;
 
 }
