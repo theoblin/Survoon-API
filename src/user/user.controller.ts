@@ -65,6 +65,7 @@ export class UserController {
     @ApiResponse({ status: 500, description: 'Email already exist' })
     @Post() 
     async createOneUser(@Body('user') createUserData: CreateUserDto){
+      console.log("ici")
       return this.userService.createOneUser(createUserData);
     }
 

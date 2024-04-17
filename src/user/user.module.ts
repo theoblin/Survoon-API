@@ -11,10 +11,12 @@ import { TemplateService } from 'src/template/template.service';
 import { QuestionService } from 'src/question/question.service';
 import { QuestionEntity } from 'src/question/question.entity';
 import { LanguageEntity } from 'src/language/language.entity';
+import { IsEmailUniqueConstraint } from './validators/email.validator';
+import { IsMatchingOldPasswordConstraint } from './validators/password.validator';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity,LanguageEntity])],
-  providers: [UserService,SurveyService,TemplateService,QuestionService],
+  providers: [IsEmailUniqueConstraint,IsMatchingOldPasswordConstraint,UserService,SurveyService,TemplateService,QuestionService],
   controllers: [
     UserController
   ],

@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUserRO } from './user.interface';
@@ -22,30 +22,24 @@ export class UserService {
     ) { }
 
     async getOneUserById(id: number): Promise<IUserRO> {
-        if (!id) {throw new HttpException({ Error: 'No id' }, 403);}
+        if (!id) {throw new HttpException({ message: 'No id provided' }, 403);}
 
         const user = await this.userEntityRepository.findOne({ where: { id: id } });
 
         if (!user) {
-            throw new HttpException({ User: ' not found' }, 404);
+            throw new HttpException({ message: 'User not found' }, 404);
         }
         return this.buildUserRO(user)
     }
 
     async getOneUserByEmail(email: string): Promise<IUserRO> {
         const user = await this.userEntityRepository.findOne({ where: { email: email } });
-
-        if (!user) {
-            const errors = { User: ' not found' };
-            throw new HttpException({ errors }, 401);
-        }
-
-        return this.buildUserRO(user)
+        if (user)  return this.buildUserRO(user)
     }
 
     async updateOneUser(id: number, dto: UpdateUserDto) : Promise<IUserRO> {
 
-        if (!id) throw new HttpException({ User: 'Not found' }, 401);
+        if (!id) throw new HttpException({ message: 'User not found' }, 401);
 
         if (dto.language){
             try{
@@ -57,39 +51,27 @@ export class UserService {
                   dto.language = language
         
             }catch(error){
-                throw new HttpException({"language":error}, 500);
+                throw new HttpException({message:error}, 500);
             }
         }
 
-        let toUpdate = await this.userEntityRepository.findOne({ where: { id: id } });
-        const dbPassword = toUpdate.password
 
-        if (!toUpdate) throw new HttpException({ User: 'Not found' }, 404);
-        let updated = Object.assign(toUpdate, dto);
-        if(dto.password && dto.passwordOld && dto.passwordConfirm){
+        const queryBuilder = this.userEntityRepository.createQueryBuilder('user');
+        const user = await queryBuilder
+        .leftJoinAndSelect("user.language", "language")
+        .where('user.id = :id', {  id:id })
+        .getOne();
 
-            if( await  this.comparePasswords(dbPassword, dto.passwordOld)){
+        
+        if (!user) throw new HttpException({ message: 'User not found' }, 404);
+        let updated = Object.assign(user, dto);
 
-                await this.hashPassword(dto.passwordOld).then(e => {
-                    dto.passwordOld = e;
-                })
-
-                if (dto.password == dto.passwordConfirm){
-                    await this.hashPassword(dto.password).then(e => {
-                        dto.password = e;
-                    })
-                }else{
-                    throw new HttpException({ Password: 'Not matching' }, 400);
-                }
-
-            }else{
-                throw new HttpException({ Password: 'Old password wrong' }, 400);
-            }
-
-        }else{
-            throw new HttpException({ Password: 'No passwords' }, 400);
+        if (dto.password ){
+            await this.hashPassword(dto.password).then(e => {
+                dto.password = e;
+            })
         }
-        const user = await this.userEntityRepository.update(id, {
+         await this.userEntityRepository.update(id, {
             ...(dto.email && { email: dto.email }),
             ...(dto.password && { password: dto.password }),
             ...(dto.type && { type: dto.type }),
@@ -109,15 +91,18 @@ export class UserService {
 
             dto.language = language.id;
         }catch(error){
-            throw new HttpException({"language":error}, 500);
+            throw new HttpException([{message:"Language error"}], 400);
         }
 
         dto.createdDate = new Date();
+        
 
         await this.hashPassword(dto.password).then(e => {
             dto.password = e;
         })
+
         let created = Object.assign(dto);
+
         try {
             const user = await this.userEntityRepository.save(created)
             user.token = this.generateJWT(dto);
@@ -130,11 +115,8 @@ export class UserService {
     }
 
     async deleteById(id: number): Promise<DeleteResult> {
-        if(id){
+            if(!id) throw new HttpException({ message: 'No id provided' }, 400);
             return await this.userEntityRepository.delete({ id: id });
-        }else{
-            throw new HttpException({ User: 'Id missing' }, 401);
-        }
     }
 
     async loginUser(dto: LoginUserDto): Promise<IUserRO> {
@@ -145,9 +127,9 @@ export class UserService {
           .where('user.email = :email', {  email:dto.email })
           .getOne();
         
-        if (!user) throw new HttpException({ User: 'Not found' }, 401);
+        if (!user) throw new HttpException({ message: 'User not found' }, 401);
         const match = await bcrypt.compare(dto.password, user.password)
-        if (!match) throw new HttpException({ User: 'Password mismatch' }, 401);
+        if (!match) throw new HttpException({ message: 'Wrong credentials' }, 401);
         return this.buildUserRO(user)
     }
 

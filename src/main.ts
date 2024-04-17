@@ -3,9 +3,11 @@ import { AppModule } from './app.module';
 import { ConfigService } from "@nestjs/config"
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors();
 
   const configService = app.get(ConfigService);

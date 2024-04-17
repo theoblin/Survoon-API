@@ -2,7 +2,7 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { UserModule } from '../src/user/user.module'; 
-import { UserService } from 'src/user/UserService';
+import { UserService } from '../src/user/user.service';
 import { INestApplication } from '@nestjs/common';
 import { SurveyModule } from 'src/survey/survey.module';
 
