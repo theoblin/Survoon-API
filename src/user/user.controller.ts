@@ -38,9 +38,9 @@ export class UserController {
     @ApiOperation({ summary: 'Search user s surveys' })
     @ApiResponse({ status: 200, description: 'Return survey' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Get('surveys') 
-    async getUserSurvey(@Body('id') userId: number)   {
-      return this.surveyService.getUserSurveyById(userId)
+    @Get('/:id/surveys') 
+    async getUserSurvey(@Param() data)   {
+      return this.surveyService.getUserSurveyById(data.id)
     } 
 
     @ApiOperation({ summary: 'Search user s templates' })
@@ -65,7 +65,6 @@ export class UserController {
     @ApiResponse({ status: 500, description: 'Email already exist' })
     @Post() 
     async createOneUser(@Body('user') createUserData: CreateUserDto){
-      console.log("ici")
       return this.userService.createOneUser(createUserData);
     }
 

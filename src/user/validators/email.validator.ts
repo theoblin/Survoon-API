@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator } from "class-validator";
+import { ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator } from "class-validator";
 import { UserService } from "../user.service";
 
 @ValidatorConstraint({ name: 'isEmailUnique', async: true })
@@ -27,3 +27,28 @@ import { UserService } from "../user.service";
         });
       }
     }
+
+    export function IsMatching(property: string, validationOptions?: ValidationOptions) {
+      return function (object: any, propertyName: string) {
+        registerDecorator({
+          name: 'matchesProperty',
+          target: object.constructor,
+          propertyName: propertyName,
+          constraints: [property],
+          options: validationOptions,
+          validator: {
+            validate(value: any, args: ValidationArguments) {
+    
+              const [relatedPropertyName] = args.constraints;
+              const relatedValue = (args.object as any)[relatedPropertyName];
+              return typeof value === 'string' && typeof relatedValue === 'string' && value === relatedValue;
+            },
+            defaultMessage(args: ValidationArguments) {
+              const [relatedPropertyName] = args.constraints;
+              return `${propertyName} must match ${relatedPropertyName}`;
+            },
+          },
+        });
+      };
+    }
+    

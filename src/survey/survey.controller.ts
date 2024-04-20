@@ -13,9 +13,9 @@ export class SurveyController {
     @ApiOperation({ summary: 'Search survey' })
     @ApiResponse({ status: 200, description: 'Return survey' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Post() 
-    async getOneSurvey(@Body('id') surveyId:number)   {
-      return this.surveyService.getOneSurveyById(surveyId)
+    @Get("/:id") 
+    async getOneSurvey(@Param() data ,@User('id') userId: number)   {
+      return this.surveyService.getOneSurveyById(data.id,userId)
     } 
 
 
@@ -24,7 +24,6 @@ export class SurveyController {
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Post("answers") 
     async getSurveyAnswers(@Body('id') surveyId: number)   {
-      console.log(surveyId)
       return this.answerService.getSurveyAnswersById(surveyId)
     } 
 
@@ -42,8 +41,7 @@ export class SurveyController {
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Post("/create")
     async createOneSurvey(@User('id') userId: number,@Body('survey') createSurveyData: CreateSurveyDto,@Body('template') templateId:number,@Body('language') languageCode:string){
-      console.log(createSurveyData)
-      return this.surveyService.createOneSurvey(userId,createSurveyData,templateId,languageCode)
+      return this.surveyService.createOneSurvey(userId,createSurveyData)
     }
 
     @ApiOperation({ summary: 'Delete survey' })

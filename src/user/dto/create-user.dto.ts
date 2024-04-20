@@ -13,6 +13,11 @@ export class CreateUserDto {
   readonly email: string;
 
   @ApiProperty()
+  @IsMatching('email')
+  @IsString()
+  readonly emailConfirm: string;
+
+  @ApiProperty()
   @IsPasswordValid(4,"password")
   @IsString()
   password: string;
@@ -26,11 +31,13 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Type cant be null',always: true})
   @IsString()
   readonly type: string;
-
+  
   readonly token: string;
 
   createdDate: Date;
 
+  @ApiProperty()
+  @IsNotEmpty({ message: 'Language cant be null',always: true})
   language: number;
   
 }
