@@ -4,7 +4,6 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateQuestionDto {
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Title cant be null',always: true})
   readonly title: string;
 
   @ApiProperty()
@@ -12,7 +11,6 @@ export class CreateQuestionDto {
   readonly type: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Config cant be null',always: true})
   readonly config: string;
 
   @ApiProperty()
@@ -20,7 +18,6 @@ export class CreateQuestionDto {
   readonly name: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Visibility cant be null',always: true})
   readonly visibility: string;
 
   

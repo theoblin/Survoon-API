@@ -29,12 +29,14 @@ export class SurveyService {
         const survey = await queryBuilder
           .leftJoinAndSelect('survey.user', 'user')
           .leftJoinAndSelect("survey.template", "template")
+          .leftJoinAndSelect('survey.question', 'question')
           .where(
             new Brackets((qb1) => {
               qb1.where('survey.id = :id', { id }).andWhere('survey.user.id = :userId', { userId });
             })
           )
           .getOne();
+          console.log(survey)
 
         if (!survey) {
             const errors = { message: 'survey not found' };
@@ -49,6 +51,7 @@ export class SurveyService {
         await this.surveyEntityRepository.createQueryBuilder("survey")
         .leftJoinAndSelect("survey.template", "template")
         .leftJoinAndSelect("survey.language", "language")
+        .leftJoinAndSelect('survey.question', 'question')
         .leftJoinAndSelect("survey.user", "user")
         .where("user.id = :id", {id:id})
         .getMany().then(surveys => {
@@ -124,7 +127,8 @@ export class SurveyService {
             createdDate:survey.createdDate,
             lastUpdateDate:survey.lastUpdateDate,
             user:survey.user.id,
-            template:survey.template.id
+            template:survey.template.id,
+            question:survey.question
         };
 
         return { survey: surveyRO };

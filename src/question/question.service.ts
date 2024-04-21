@@ -8,7 +8,6 @@ import { QuestionEntity } from './question.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { SurveyEntity } from 'src/survey/survey.entity';
-import { SurveyService } from 'src/survey/survey.service';
 import { TemplateEntity } from 'src/template/template.entity';
 
 @Injectable()
@@ -74,16 +73,18 @@ export class QuestionService {
 
     async createOneQuestion(userId:number,surveyId:number,templateId:number, dto: CreateQuestionDto)  : Promise<IQuestionRO>   {
 
+        console.log(surveyId)
+
         let question = Object.assign(dto);
         let params = {"survey":null,"template":null};
 
         question.name = dto.name;
-        question.title = dto.title;
-        question.config = dto.config;
+        question.title = "The title is here";
+        question.config = "config";
         question.createdDate = new Date();
         question.lastUpdateDate = new Date();
         question.type = dto.type;
-        question.visibility = dto.visibility;
+        question.visibility = "private";
 
         const creator = await this.UserEntityRepository.findOne({where:{id:userId}})
 

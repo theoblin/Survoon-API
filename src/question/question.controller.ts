@@ -36,9 +36,9 @@ export class QuestionController {
     @ApiOperation({ summary: 'Delete question' })
     @ApiResponse({ status: 201, description: 'The question has been successfully deleted.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
-    @Delete() 
-    async deleteOneQuestion(@Body('id') id: number){
-      return this.questionService.deleteQuestionById(id)
+    @Delete("/:id") 
+    async deleteOneQuestion(@Param() data){
+      return this.questionService.deleteQuestionById(data.id)
     }
 
 }
