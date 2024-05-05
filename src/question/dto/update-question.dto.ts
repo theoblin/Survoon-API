@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { QuestionTypeEntity } from 'src/questionType/questionType.entity';
 
 export class UpdateQuestionDto {
 
@@ -8,21 +9,32 @@ export class UpdateQuestionDto {
   readonly id: number;
 
   @ApiProperty()
+  @IsOptional()
   readonly title: string;
 
   @ApiProperty()
-  readonly type: string;
+  @IsOptional()
+  questionType: QuestionTypeEntity;
 
   @ApiProperty()
-  readonly config: string;
+  @IsOptional()
+  readonly config: object;
 
   @ApiProperty()
+  @IsOptional()
   readonly name: string;
 
   @ApiProperty()
+  @IsOptional()
   readonly visibility: string;
 
   @ApiProperty()
+  @IsOptional()
+  readonly position: number;
+
+
+  @ApiProperty()
+  @IsOptional()
   lastUpdateDate:Date;
 
 }

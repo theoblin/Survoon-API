@@ -11,10 +11,13 @@ import { QuestionService } from './question.service';
 import { QuestionController } from './question.controller';
 import { TemplateEntity } from 'src/template/template.entity';
 import { LanguageEntity } from 'src/language/language.entity';
+import { QuestionTypeEntity } from 'src/questionType/questionType.entity';
+import { QuestionTypeService } from 'src/questionType/questionType.service';
+import { QuestionTypeModule } from 'src/questionType/questionType.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([QuestionEntity,SurveyEntity,UserEntity,TemplateEntity,LanguageEntity]), SurveyModule, UserModule],
-  providers: [QuestionService,SurveyService],
+  imports: [TypeOrmModule.forFeature([QuestionEntity,SurveyEntity,UserEntity,TemplateEntity,LanguageEntity,QuestionTypeEntity]), SurveyModule, UserModule,QuestionTypeModule],
+  providers: [QuestionService,SurveyService,QuestionTypeService],
   controllers: [
     QuestionController
   ],

@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { QuestionService } from './question.service';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { CreateQuestionDto } from './dto/create-question.dto';
+import { User } from 'src/user/user.decorator';
 
 
 @Controller('/api/v2/question')
@@ -21,8 +22,9 @@ export class QuestionController {
     @ApiResponse({ status: 201, description: 'The question has been successfully updated.' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Put() 
-    async updateOneQuestion(@Body('user') id: number,@Body('question') newQuestionData: UpdateQuestionDto){
-      return this.questionService.updateOneQuestion(newQuestionData,id)
+    async updateOneQuestion(@User('id') userId: number,@Body('question') newQuestionData: UpdateQuestionDto){
+      console.log(newQuestionData)
+      return this.questionService.updateOneQuestion(newQuestionData,userId)
     }
 
     @ApiOperation({ summary: 'Create question' })

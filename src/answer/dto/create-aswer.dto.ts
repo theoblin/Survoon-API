@@ -7,12 +7,21 @@ export class CreateAnswerDto {
   readonly ip: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'questionsList cant be null',always: true})
-  readonly questionsList: string;
+  @IsNotEmpty({ message: 'body cant be null',always: true})
+  readonly body: object;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'valid cant be null',always: true})
   readonly valid: boolean;
+
+  @ApiProperty()
+  code: string;
+
+  @ApiProperty()
+  readonly position: number;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'ended cant be null',always: true})
+  readonly ended: boolean;
 
   @ApiProperty()
   readonly language: string;

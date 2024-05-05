@@ -1,3 +1,4 @@
+import { QuestionTypeEntity } from "src/questionType/questionType.entity";
 import { SurveyEntity } from "src/survey/survey.entity";
 import { UserEntity } from "src/user/user.entity";
 import {
@@ -6,7 +7,6 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn 
 } from "typeorm";
 
@@ -17,17 +17,14 @@ export class QuestionEntity {
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column() 
-    config:string;
+    @Column("json") 
+    config:object;
 
     @Column() 
     name:string;
 
     @Column() 
     title:string;
-  
-    @Column() 
-    type: string;
   
     @Column() 
     createdDate: Date;
@@ -38,6 +35,9 @@ export class QuestionEntity {
     @Column() 
     visibility:string;
 
+    @Column() 
+    position:number;
+
     @ManyToOne(type => UserEntity, user => user.template, { onDelete: 'CASCADE' })
     user: UserEntity;
 
@@ -45,4 +45,6 @@ export class QuestionEntity {
     @JoinTable()
     surveys: SurveyEntity[];
 
+    @ManyToOne(type => QuestionTypeEntity, questionType => questionType.question,{cascade:true})
+    questionType: QuestionTypeEntity;
 }

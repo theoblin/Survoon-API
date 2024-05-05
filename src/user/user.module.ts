@@ -13,9 +13,10 @@ import { QuestionEntity } from 'src/question/question.entity';
 import { LanguageEntity } from 'src/language/language.entity';
 import { IsEmailUniqueConstraint } from './validators/email.validator';
 import { IsMatchingOldPasswordConstraint } from './validators/password.validator';
+import { QuestionTypeEntity } from 'src/questionType/questionType.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity,LanguageEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity,SurveyEntity,TemplateEntity,QuestionEntity,LanguageEntity,QuestionTypeEntity])],
   providers: [IsEmailUniqueConstraint,IsMatchingOldPasswordConstraint,UserService,SurveyService,TemplateService,QuestionService],
   controllers: [
     UserController

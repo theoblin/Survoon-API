@@ -9,6 +9,7 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { SurveyEntity } from 'src/survey/survey.entity';
 import { TemplateEntity } from 'src/template/template.entity';
+import { QuestionTypeEntity } from 'src/questionType/questionType.entity';
 
 @Injectable()
 export class QuestionService {
@@ -22,7 +23,8 @@ export class QuestionService {
         private readonly QuestionEntityRepository: Repository<QuestionEntity>,
         @InjectRepository(TemplateEntity) 
         private readonly TemplateEntityRepository: Repository<TemplateEntity>,
-
+        @InjectRepository(QuestionTypeEntity) 
+        private readonly QuestionTypeEntityRepository: Repository<QuestionTypeEntity>,
     ) {}
 
     async getOneQuestionById(id:number) : Promise<IQuestionRO> {
@@ -30,6 +32,7 @@ export class QuestionService {
         const queryBuilder = this.QuestionEntityRepository.createQueryBuilder('question');
         const question = await queryBuilder
           .leftJoinAndSelect('question.user', 'user')
+          .leftJoinAndSelect('question.questionType', 'questionType')
           .where('question.id = :id', { id })
           .getOne();
     
@@ -58,37 +61,65 @@ export class QuestionService {
     }
 
     async updateOneQuestion( dto: UpdateQuestionDto,userId:number): Promise<IQuestionRO> {
+
+
         let toUpdate = await this.QuestionEntityRepository.createQueryBuilder("question")
         .leftJoinAndSelect("question.user", "user")
         .where("user.id = :id", {id:userId})
         .where('question.id = :id', {id:dto.id })
         .getOne();
-        if (!toUpdate) throw new HttpException('Question nor found', 403);
+
+        if (dto.questionType){
+            try{
+                const queryBuilder = this.QuestionTypeEntityRepository.createQueryBuilder('questionType');
+                const questionType = await queryBuilder
+                  .where('questionType.id = :id', {  id:dto.questionType })
+                  .getOne();
+                
+                  dto.questionType = questionType
+            }catch(error){
+                throw new HttpException({message:error}, 500);
+            }
+        }
+
+        if (!toUpdate) throw new HttpException('Question not found', 404);
         dto.lastUpdateDate = new Date();
         let updated = Object.assign(toUpdate, dto);
-        const question = await this.QuestionEntityRepository.save(updated);
 
-        return this.buildQuestionRO(question);
+
+        await this.QuestionEntityRepository.update(toUpdate.id, {
+            ...(dto.questionType && { questionType: dto.questionType }),
+            ...(dto.name && { name: dto.name }),
+            ...(dto.title && { title: dto.title }),
+            ...(dto.position && { position: dto.position }),
+            ...(dto.config && { config: dto.config })
+
+        });
+
+        return this.buildQuestionRO(updated);
     }
 
     async createOneQuestion(userId:number,surveyId:number,templateId:number, dto: CreateQuestionDto)  : Promise<IQuestionRO>   {
-
-        console.log(surveyId)
 
         let question = Object.assign(dto);
         let params = {"survey":null,"template":null};
 
         question.name = dto.name;
+        question.position = dto.position;
         question.title = "The title is here";
-        question.config = "config";
+        question.config = [{"fontSize":"10"}];
         question.createdDate = new Date();
         question.lastUpdateDate = new Date();
-        question.type = dto.type;
         question.visibility = "private";
+
+        const questionType = await this.QuestionTypeEntityRepository.findOne({where:{id:1}})
+        if (!questionType) throw new HttpException('QuestionType error', 400);
+        question.questionType = questionType;
+
 
         const creator = await this.UserEntityRepository.findOne({where:{id:userId}})
 
-        if (!creator) throw new HttpException('User not found', 401);
+        if (!creator) throw new HttpException('User not found', 404);
         question.user = creator.id;
 
         const newQuestion = await this.QuestionEntityRepository.save(question);
@@ -136,9 +167,10 @@ export class QuestionService {
             id: question.id,
             name: question.name,
             title: question.title,
-            type: question.type,
+            questionType: question.questionType,
             visibility: question.visibility,
             config:question.config,
+            position:question.position,
             createdDate:question.createdDate,
             lastUpdateDate:question.lastUpdateDate,
             user:question.user.id,

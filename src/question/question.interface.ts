@@ -1,10 +1,12 @@
+import { QuestionTypeEntity } from "src/questionType/questionType.entity";
 
 export interface IQuestionData {
     id: number;
-    config:string;
+    config:object;
     name:string;
     visibility:string;
-    type: string;
+    position:number;
+    questionType: QuestionTypeEntity;
     createdDate: Date;
     lastUpdateDate: Date;
     user:number;

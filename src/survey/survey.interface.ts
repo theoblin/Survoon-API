@@ -1,3 +1,4 @@
+import { LanguageEntity } from "src/language/language.entity";
 
 export interface ISurveyData {
     id: number;
@@ -11,6 +12,7 @@ export interface ISurveyData {
     active:boolean;
     user:number;
     template:number;
+    language:LanguageEntity
   }
   
   export interface ISurveyRO {

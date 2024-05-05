@@ -7,15 +7,14 @@ export class CreateQuestionDto {
   readonly title: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'Type cant be null',always: true})
-  readonly type: string;
-
-  @ApiProperty()
-  readonly config: string;
+  readonly config: object;
 
   @ApiProperty()
   @IsNotEmpty({ message: 'Name cant be null',always: true})
   readonly name: string;
+
+  @ApiProperty()
+  readonly position: number;
 
   @ApiProperty()
   readonly visibility: string;

@@ -1,24 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdateAnswerDto {
 
-  @IsNotEmpty({ message: 'Answer ID cant be null',always: true})
-  readonly id: number;
+  @IsNotEmpty({ message: 'code cant be null',always: true})
+  readonly code: string;
 
   @ApiProperty()
-  readonly questionsList: string;
+  @IsOptional()
+  readonly body: object;
 
   @ApiProperty()
+  @IsOptional()
+  token: string;
+
+  @ApiProperty()
+  @IsOptional()
   readonly valid: boolean;
 
   @ApiProperty()
+  readonly position: number;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'ended cant be null',always: true})
+  readonly ended: boolean;
+  
+  @ApiProperty()
+  @IsOptional()
   readonly language: string;
 
   @ApiProperty()
+  @IsOptional()
   lastUpdateDate: Date;
 
   @ApiProperty()
+  @IsOptional()
   readonly survey: number;
 
 

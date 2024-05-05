@@ -10,14 +10,21 @@ import * as answerService from 'src/answer/answer.service';
 export class SurveyController {
   constructor(private readonly surveyService: SurveyService,private readonly answerService: answerService.AnswerService) {}
 
+    @ApiOperation({ summary: 'Search survey Secure' })
+    @ApiResponse({ status: 200, description: 'Return survey' })
+    @ApiResponse({ status: 403, description: 'Forbidden.' })
+    @Get("/secure/:id") 
+    async getOneSurveySecure(@Param() data ,@User('id') userId: number)   {
+      return this.surveyService.getOneSurveyByIdSecure(data.id,userId)
+    } 
+
     @ApiOperation({ summary: 'Search survey' })
     @ApiResponse({ status: 200, description: 'Return survey' })
     @ApiResponse({ status: 403, description: 'Forbidden.' })
     @Get("/:id") 
-    async getOneSurvey(@Param() data ,@User('id') userId: number)   {
-      return this.surveyService.getOneSurveyById(data.id,userId)
+    async getOneSurvey(@Param() data )   {
+      return this.surveyService.getOneSurveyById(data.id)
     } 
-
 
     @ApiOperation({ summary: 'Search survey s answers' })
     @ApiResponse({ status: 200, description: 'Return answers' })

@@ -23,20 +23,39 @@ export class SurveyService {
         private readonly languageEntityRepository: Repository<LanguageEntity>, 
     ) {}
 
-    async getOneSurveyById(id:number,userId:number) : Promise<ISurveyRO> {
+    async getOneSurveyById(id:number) : Promise<ISurveyRO> {
 
         const queryBuilder = this.surveyEntityRepository.createQueryBuilder('survey');
         const survey = await queryBuilder
           .leftJoinAndSelect('survey.user', 'user')
           .leftJoinAndSelect("survey.template", "template")
           .leftJoinAndSelect('survey.question', 'question')
+          .leftJoinAndSelect('question.questionType', 'questionType')
+          .where('survey.id = :id', { id })
+          .getOne();
+
+        if (!survey) {
+            const errors = { message: 'survey not found' };
+            throw new HttpException({ errors }, 404);
+        }
+
+        return this.buildSurveyRO(survey)
+    }
+
+    async getOneSurveyByIdSecure(id:number,userId:number) : Promise<ISurveyRO> {
+
+        const queryBuilder = this.surveyEntityRepository.createQueryBuilder('survey');
+        const survey = await queryBuilder
+          .leftJoinAndSelect('survey.user', 'user')
+          .leftJoinAndSelect("survey.template", "template")
+          .leftJoinAndSelect('survey.question', 'question')
+          .leftJoinAndSelect('question.questionType', 'questionType')
           .where(
             new Brackets((qb1) => {
               qb1.where('survey.id = :id', { id }).andWhere('survey.user.id = :userId', { userId });
             })
           )
           .getOne();
-          console.log(survey)
 
         if (!survey) {
             const errors = { message: 'survey not found' };
@@ -128,7 +147,8 @@ export class SurveyService {
             lastUpdateDate:survey.lastUpdateDate,
             user:survey.user.id,
             template:survey.template.id,
-            question:survey.question
+            question:survey.question,
+            language:survey.language
         };
 
         return { survey: surveyRO };

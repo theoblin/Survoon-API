@@ -16,14 +16,26 @@ export class AnswerEntity {
     @Column()
     ip: string;
   
-    @Column() 
-    questionsList: string;
+    @Column('json') 
+    body: object;
   
     @Column() 
     valid: boolean;
 
     @Column() 
+    position: number;
+
+    @Column() 
+    ended: boolean;
+
+    @Column() 
     language: string;
+
+    @Column({ unique: true }) 
+    token: string;
+
+    @Column({ unique: true }) 
+    code: string;
   
     @Column() 
     createdDate: Date;
