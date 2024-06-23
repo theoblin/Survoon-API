@@ -15,6 +15,29 @@ Survoon API
 
 ## Installation
 
+Clone the project
+
+```bash
+  git clone https://github.com/theoblin/Survoon-API.git
+```
+
+Go to the project directory
+
+```bash
+  cd my-project
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+
+
+
+## Run Locally
+
 Postgres + dpage/pgadmin4 start
 
 ```bash
